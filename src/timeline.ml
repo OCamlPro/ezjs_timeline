@@ -181,8 +181,6 @@ class type timeline =
 type timeline_cs =
   (js_string t -> Unsafe.any -> options t optdef -> timeline t) constr
 
-let timeline_cs : timeline_cs = Unsafe.variable "TL.Timeline"
-
 let options ?debug ?height ?width ?is_embed ?hash_bookmark ?default_bg_color
     ?scale_factor ?initial_zoom ?zoom_sequence ?timenav_position
     ?optimal_tick_width ?base_class ?timenav_height ?timenav_height_percentage
@@ -325,6 +323,7 @@ let make ?options id json =
         Unsafe.inject (_JSON##parse (string s))
   in
   let options = match options with None -> undefined | Some o -> def o in
+  let timeline_cs : timeline_cs = Unsafe.variable "TL.Timeline" in
   let timeline = new%js timeline_cs (string id) json options in
   export "timeline" timeline
 
